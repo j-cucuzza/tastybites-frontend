@@ -13,6 +13,7 @@ type LoginProps =
 
 const Login = (props: LoginProps) => {
     const [creds, setCreds] = React.useState<Creds>({username: "", password: ""})
+    const [ error, setError ] = React.useState(false)
 
     const handleLogin = () =>
         props.onLogin(creds.username, creds.password)
@@ -21,6 +22,13 @@ const Login = (props: LoginProps) => {
         setCreds({...creds, [e.target.name]: e.target.value})
     }
 
+    React.useEffect(() => {
+        if (props.errors.generic !== "") {
+            setError(true)
+        } else {
+            setError(false)
+        }
+    }, [props.errors])
     return (
         <div className='container mx-auto justify-content-center'>
             <div className="row p-3"><br /></div>
@@ -37,7 +45,7 @@ const Login = (props: LoginProps) => {
                         <label htmlFor='inputPassword' className='form-label'>Password</label>
                         <input name="password" id='inputPassword' className='form-control w-75' type="password" value={creds.password} onChange={handleChangeCreds("password")} />
                     </div>
-                    { props.errors.generic ? <div className='alert alert-danger w-75' role='alert'>{props.errors.generic}</div> : <></>} 
+                    { error ? <div className='alert alert-danger w-75' role='alert'>{props.errors.generic}</div> : <></>}
                     <button type="submit" className='btn btn-primary' value="Login" onClick={handleLogin}>Login</button>
                 </div>
             </div>

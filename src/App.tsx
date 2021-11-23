@@ -81,6 +81,8 @@ const App = () => {
       // )
       setUserRecipes(list.map((recipe: any) =>  {
         return formatRecipe(recipe)}))
+        // setLoggedIn(true)
+
     })
 
 
@@ -92,12 +94,15 @@ const App = () => {
             setUserRecipes(userRecipes => [ ...userRecipes, r])
             )
             setLoggedIn(true)
+
           } else {
             // return error information for the api call
             console.log(list)
+            setLoggedIn(true)
+
           }
       })
-    if (loggedIn) {
+    if (logIn) {
       history.push('/')
     }
   }
