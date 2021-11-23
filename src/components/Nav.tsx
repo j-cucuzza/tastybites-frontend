@@ -27,7 +27,7 @@ const Nav = (props: NavProps) => {
         <div>
         <nav className='navbar navbar-expand-lg navbar-dark bg-secondary'>
             <div className='container-fluid'>
-                <img src='http://localhost:8000/media/images/android-chrome-192x192.png'  alt="logo" width="30" height="24"/>
+                <img src='https://d2i7h2wv1n9itn.cloudfront.net/media/img/android-chrome-192x192.png'  alt="logo" width="30" height="24"/>
                 <Link to='/' className='navbar-brand'>Tasty Bites</Link>
                 
                 <button className='navbar-toggler' type='button' data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">

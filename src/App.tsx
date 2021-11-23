@@ -81,7 +81,6 @@ const App = () => {
       // )
       setUserRecipes(list.map((recipe: any) =>  {
         return formatRecipe(recipe)}))
-        setLoggedIn(true)
     })
 
 
@@ -92,12 +91,13 @@ const App = () => {
             list.map((r: RecipeType) => 
             setUserRecipes(userRecipes => [ ...userRecipes, r])
             )
+            setLoggedIn(true)
           } else {
             // return error information for the api call
             console.log(list)
           }
       })
-    if (logIn) {
+    if (loggedIn) {
       history.push('/')
     }
   }
@@ -233,6 +233,13 @@ const App = () => {
   const handleAddRecipe = (file: any, recipe: RecipeType, e: any) => {
     const data = new FormData();
     data.append('recipe', JSON.stringify(recipe))
+
+    // Object.defineProperty(file[0], 'name', {
+    //   writable: true,
+    //   value: new Date().getTime() + '-' + file[0].name
+    // });
+    // console.log(file[0])
+    // console.log(new Date().getTime() + '-' + file[0].name)
     data.append('image', file[0])
     api.addFullRecipe(data)
       .then(json => {
@@ -478,3 +485,4 @@ const App = () => {
 }
 
 export default App;
+
