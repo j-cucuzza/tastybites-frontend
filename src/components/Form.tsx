@@ -289,12 +289,14 @@ const Form = (props: FormProps) => {
                     <select onChange={handleInputChange('cuisine')} className='form-select ' aria-label='select cuisine'>
                                 <option></option>
                                 <option value='American'>American</option>
+                                <option value='Asian'>Asian</option> 
                                 <option value='German'>German</option>
                                 <option value='Indian'>Indian</option>
                                 <option value='Italian'>Italian</option>
                                 <option value='Japanese'>Japanese</option>
                                 <option value='Korean'>Korean</option> 
                                 <option value='Mexican'>Mexican</option> 
+                                <option value='Vietnamese'>Vietnamese</option> 
                             </select>
 
                     { errors.cuisine ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please select a cuisine.</div></div> : <></>}
@@ -366,9 +368,8 @@ const Form = (props: FormProps) => {
                     
                     <hr />
                     <div className='text-center'>
-                        <button type="submit" className='btn btn-primary' value="Create Recipe">{props.uploading ? 
-                            <div><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</div>
-                            : <div>Create Recipe</div>}</button>
+                        { props.uploading ?  <button type="submit" className='btn btn-primary disabled' value="Create Recipe"><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>
+                            : <button type="submit" className='btn btn-primary' value="Create Recipe">Create Recipe</button>}
                     </div>
                 </form>
             </div>

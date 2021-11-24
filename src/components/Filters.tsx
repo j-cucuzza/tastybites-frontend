@@ -54,12 +54,14 @@ const Filters = (props: any) => {
                             <select onChange={(e) => props.onInputChange(e, 'cuisine')} className='form-select btn-outline-secondary' aria-label='select cuisine'>
                                 <option></option>
                                 <option value='American'>American</option>
+                                <option value='Asian'>Asian</option> 
                                 <option value='German'>German</option>
                                 <option value='Indian'>Indian</option>
                                 <option value='Italian'>Italian</option>
                                 <option value='Japanese'>Japanese</option>
                                 <option value='Korean'>Korean</option> 
                                 <option value='Mexican'>Mexican</option> 
+                                <option value='Vietnamese'>Vietnamese</option> 
                             </select>
                         </div>
                     </div>

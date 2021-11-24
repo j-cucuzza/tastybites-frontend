@@ -249,6 +249,7 @@ const App = () => {
       }).catch((e: api.ApiError) => {
         console.log(e)
         alert("There was a problem uploading your recipe.  Please try again and ensure all fields are filled out properly.")
+        setUploading(false)
         // handle error
       })
   }
@@ -318,6 +319,10 @@ const App = () => {
                 setPulling(false)
             }
         })
+        .catch((e: any) => {
+          alert("There was a problem fetching the recipes.  Please try again.")
+          setPulling(false)
+        })
   }
 
 
@@ -329,10 +334,14 @@ const App = () => {
       setPulling(false)
     } else {
       api.searchSpoon(cond)
-      .then(response => {
-        response.map((r: RecipeType) => setRecipes(recipes => [r, ...recipes]))
-        setPulling(false)
-      })
+        .then(response => {
+          response.map((r: RecipeType) => setRecipes(recipes => [r, ...recipes]))
+          setPulling(false)
+        })
+        .catch((e: any) => {
+          alert("There was a problem fetching the recipes.  Please try again.")
+          setPulling(false)
+        })
     }
   }
 
