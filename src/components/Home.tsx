@@ -17,6 +17,7 @@ type HomeProps =
     , disabled: boolean
     , onButton: (r: Recipe, i: number) => any
     , onDelete: (r: Recipe) => any
+    , pulling: boolean
     }
 
 const Home = (props: HomeProps) => {
@@ -44,7 +45,8 @@ const Home = (props: HomeProps) => {
                                     onButton={props.onButton}
                                     onRandomButton={props.onRandomButton}
                                     onMoreButton={props.onMoreButton}
-                                    userSpecific={0}/>
+                                    userSpecific={0}
+                                    pulling={props.pulling}/>
                     </div>
                 </div>
             </div>

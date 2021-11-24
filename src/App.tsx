@@ -32,8 +32,8 @@ const App = () => {
   const [ userRecipes, setUserRecipes ] = React.useState<RecipeType[]>([])
   const [ disabled, setDisabled ] = React.useState<boolean>(true)
   const [ apiErr, setApiErr ] = React.useState<boolean>(false)
-  const [ recipeTags, setRecipeTags ] = React.useState([])
-
+  const [ uploading, setUploading ] = React.useState(false)
+  const [ pulling, setPulling ] = React.useState(false)
 /**
  * 
  * 
@@ -236,22 +236,19 @@ const App = () => {
 
   // create new recipe
   const handleAddRecipe = (file: any, recipe: RecipeType, e: any) => {
+    setUploading(true)
     const data = new FormData();
     data.append('recipe', JSON.stringify(recipe))
-
-    // Object.defineProperty(file[0], 'name', {
-    //   writable: true,
-    //   value: new Date().getTime() + '-' + file[0].name
-    // });
-    // console.log(file[0])
-    // console.log(new Date().getTime() + '-' + file[0].name)
     data.append('image', file[0])
     api.addFullRecipe(data)
       .then(json => {
           let newRecipe = formatRecipe(json)
           setRecipes([newRecipe, ...recipes])
+          setUploading(false)
           history.push('/')
       }).catch((e: api.ApiError) => {
+        console.log(e)
+        alert("There was a problem uploading your recipe.  Please try again and ensure all fields are filled out properly.")
         // handle error
       })
   }
@@ -310,12 +307,15 @@ const App = () => {
 
   // get random recipes when button is pressed in filters
   const handleRandomButton = () => {
+    setPulling(true)
     api.getRandom()
         .then(response => {
             if(Array.isArray(response)){
                 response.map((r: RecipeType) => setRecipes(recipes => [ r, ...recipes]))
+                setPulling(false)
             } else {
                 alert("We are unable to get more recipes at this time.")
+                setPulling(false)
             }
         })
   }
@@ -323,13 +323,15 @@ const App = () => {
 
   // get more recipes when button is pressed in filters
   const handleMoreButton = (cond: {search: string, cuisine: string, diet: string}) => {
+    setPulling(true)
     if (cond.search === "" && cond.cuisine === "" && cond.diet === ""){
       alert("Please add some filters before you try to get new recipes!")
+      setPulling(false)
     } else {
       api.searchSpoon(cond)
       .then(response => {
-        console.log(response)
         response.map((r: RecipeType) => setRecipes(recipes => [r, ...recipes]))
+        setPulling(false)
       })
     }
   }
@@ -449,7 +451,7 @@ const App = () => {
                 <Login onLogin={handleLogin} errors={errors} />
               </Route>
               <Route exact path='/addrecipe/'>
-                <Form user={profile} onAddRecipe={handleAddRecipe}/>
+                <Form user={profile} onAddRecipe={handleAddRecipe} uploading={uploading}/>
               </Route>
               <Route exact path='/signup/'>
                 <Signup errors={errors} onSignup={handleSignup}/>
@@ -478,7 +480,8 @@ const App = () => {
                       onFavorite={handleFavorites} 
                       disabled={disabled}
                       onRandomButton={handleRandomButton}
-                      onMoreButton={handleMoreButton}/>
+                      onMoreButton={handleMoreButton}
+                      pulling={pulling}/>
               </Route>
             </Switch>
           </div>

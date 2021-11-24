@@ -38,14 +38,14 @@ interface Recipe extends Indexable
   , slug: string
   , api: boolean
   , user: number
-  , image: ''
+  , image: any
   , gluten_free: Boolean
   , dairy_free: Boolean
   , low_carb: Boolean
   , low_calorie: Boolean
   , vegetarian: Boolean
   , vegan: Boolean
-  , cuisine: string
+  , cuisine: any
   }
 
 interface Ingredient extends Indexable

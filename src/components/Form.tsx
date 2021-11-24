@@ -6,6 +6,7 @@ import slug from '../util/slug'
 type FormProps =
     { user: UserMetadata
     , onAddRecipe: (file: any, recipe: Recipe, e: any) => (void)
+    , uploading: boolean
     }
 
 const Form = (props: FormProps) => {
@@ -19,18 +20,26 @@ const Form = (props: FormProps) => {
     const [ ingredientInputs, setIngredientInputs ]  = React.useState(['ingredient-0'])
     const [ instructionInputs, setInstructionInputs ] = React.useState(['instruction-0'])
     const [ ingredients, setIngredients ] = React.useState<Ingredient[]>([defaultIngredient])
-    const [ file, setFile ] = React.useState<any>()
+    const [ errors, setErrors ] = React.useState({
+        name: false,
+        ingredients: false,
+        instructions: false,
+        cuisine: false,
+        image: false,
+        servings: false,
+    })
+    const [ file, setFile ] = React.useState<any>(null)
     const [ recipe, setRecipe ] = React.useState<Recipe>({
         name: "",
         recipe_id: -1,
-        url: "",
+        url: "http://tastybites.surge.sh",
         servings: 0,
         ingredients: [],
         instructions: [],
         slug: "",
         api: false,
         user: props.user.id,
-        image: ''
+        image: null
         , gluten_free: false
         , dairy_free: false
         , low_carb: false
@@ -70,9 +79,9 @@ const Form = (props: FormProps) => {
     // new ingredient input
     const ingredientInput = (key: string, i: number) => 
         (<div className='input-group mb-2'>
-            <input type='number' className='form-control' key={ i.toString()  + '-qty'} id={ i.toString() + '-qty' } onChange={ handleIngredientListChange("qty", i)} name='quantity' min='0' step='0.25' placeholder='1'/>
-            <input type='text' className='form-control' key={ i.toString() + '-units'} id={ i.toString() + '-units' } onChange={ handleIngredientListChange("units", i)}name='unit' placeholder='tsp'/>
-            <input type='text' className='form-control' key={ i.toString() + '-ingredient'} id={ i.toString() + '-ingredient' } onChange={ handleIngredientListChange("name", i)}name='ingredients[]' placeholder='salt'/>
+            <input type='number' className='form-control' key={ i.toString()  + '-qty'} id={ i.toString() + '-qty' } onChange={ handleIngredientListChange("qty", i)} name='quantity' min='0' step='0.25' placeholder='amount'/>
+            <input type='text' className='form-control' key={ i.toString() + '-units'} id={ i.toString() + '-units' } onChange={ handleIngredientListChange("units", i)}name='unit' placeholder='unit'/>
+            <input type='text' className='form-control' key={ i.toString() + '-ingredient'} id={ i.toString() + '-ingredient' } onChange={ handleIngredientListChange("name", i)}name='ingredients[]' placeholder='name'/>
         </div>)
 
 
@@ -123,6 +132,7 @@ const Form = (props: FormProps) => {
         let updatedInputs = recipe.instructions
         updatedInputs[index] = e.target.value
         setRecipe({ ...recipe, instructions: updatedInputs})
+        setErrors({...errors, instructions: false})
     }
 
     
@@ -132,7 +142,7 @@ const Form = (props: FormProps) => {
      * @param index / index of ingredient item to change
      * @returns 
      */
-    const handleIngredientListChange = (key: string, index: number) => (e: any) => 
+    const handleIngredientListChange = (key: string, index: number) => (e: any) => {
         setIngredients(ingredients.map((item) => {
             if (ingredients.indexOf(item) === index) {
                 return {
@@ -142,7 +152,8 @@ const Form = (props: FormProps) => {
             }
             return item
         }))
-
+        setErrors({...errors, ingredients: false})
+    }
 
     // UPDATE RECIPE WHEN INGREDIENTS CHANGE
     React.useEffect(() => {
@@ -158,9 +169,13 @@ const Form = (props: FormProps) => {
      */
     const handleInputChange = (key: string) => (e: any) => {
         setRecipe({...recipe, [key]: e.target.value})
+        setErrors({...errors, [key]: false})
         // generate slug
         if (key === 'name') {
             setRecipe({...recipe, name: e.target.value, slug: slug(e.target.value)})
+        }
+        if (key === 'servings') {
+            setRecipe({...recipe, servings: parseInt(e.target.value)})
         }
     }
 
@@ -170,16 +185,36 @@ const Form = (props: FormProps) => {
      * validate form inputs
      * 
      */
-    const validateForm = () =>
-            (recipe.name === ""                                    ||
-            recipe.cuisine === ""                                  ||
-            file === null                                          ||
-            recipe.ingredients.some(i => i.name === "" 
-                                        || i.qty === 0 
-                                        || i.units === "")         ||
-            recipe.ingredients.length === 0                        ||
-            recipe.instructions.some(i => i === "")                ||
-            recipe.instructions.length === 0        )
+    const validateForm = () =>{
+        let err = false
+        
+        if (recipe.name === ""){
+            setErrors({...errors, name: true})
+            err = true
+        } else if (recipe.cuisine === ""){
+            setErrors({...errors, cuisine: true})
+            err = true
+        } else if (recipe.servings === 0 || isNaN(recipe.servings)) {
+            setErrors({...errors, servings: true})
+            err = true
+        } else if (file === null){
+            setErrors({...errors, image: true})
+            err = true
+        } else if (recipe.ingredients.length === 0 || recipe.ingredients.some(i => i.name === "" || i.qty === 0 || i.units === "")){
+            setErrors({...errors, ingredients: true})
+            err = true
+        } else if (recipe.instructions.length === 0 || recipe.instructions.some(i => i === "")){
+            setErrors({...errors, instructions: true})
+            err = true
+        } else if (file === null) {
+            setErrors({...errors, image: true})
+            err = true
+        }
+        
+        return err
+
+    }
+
 
 
     /**
@@ -190,9 +225,11 @@ const Form = (props: FormProps) => {
         console.log(image[0].type)
         if(image[0].type === "image/png" || image[0].type === "image/jpeg") {
             setFile(image)
+            setErrors({...errors, image: false})
         } else {
             alert("Please provide a .jpg or .png file")
-            setFile(null)
+            setFile('')
+            setErrors({...errors, image: true})
         }
     }
 
@@ -235,6 +272,7 @@ const Form = (props: FormProps) => {
                         placeholder='Snickerdoodle Cookies' 
                         onChange={ handleInputChange('name')}/>
 
+                    { errors.name ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please enter a valid name.</div></div> : <></>}
 
                     <hr />
                     <label htmlFor='recipe-image' className='form-label'>Recipe Image</label>
@@ -244,9 +282,10 @@ const Form = (props: FormProps) => {
                         aria-label="recipe-image"
                         onChange={ (e: any) => validateImage(e.target.files)}/>
 
+                    { errors.image ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please select a valid image (.png or .jpg).</div></div> : <></>}
+
                     <hr />
                     <label htmlFor='cuisine' className='form-label'>Cuisine</label><br/>
-                    {/* <small className='text-muted'>Optional</small> */}
                     <select onChange={handleInputChange('cuisine')} className='form-select ' aria-label='select cuisine'>
                                 <option></option>
                                 <option value='American'>American</option>
@@ -257,6 +296,8 @@ const Form = (props: FormProps) => {
                                 <option value='Korean'>Korean</option> 
                                 <option value='Mexican'>Mexican</option> 
                             </select>
+
+                    { errors.cuisine ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please select a cuisine.</div></div> : <></>}
 
                     <hr />
                     <label htmlFor='diet' className='form-label'>Diet</label><br/>
@@ -292,6 +333,8 @@ const Form = (props: FormProps) => {
                         min={1}
                         onChange={ handleInputChange('servings')}/>
 
+                    { errors.servings ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please enter a valid number.</div></div> : <></>}
+
                     <hr />
                     <label htmlFor='ingredients' className='form-label'>Ingredients</label>
                     <div id='ingredients'>
@@ -301,6 +344,8 @@ const Form = (props: FormProps) => {
                             <input type="button" className='btn btn-outline-secondary' onClick={() => removeInput('ingredient', ingredientInputs) } id="removeIngredient" value="Remove" />
                         </div>
                     </div>
+
+                    { errors.ingredients ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please ensure all fields are filled.</div></div> : <></>}
 
                     <hr />
                     <label htmlFor='instructions' className='form-label'>Instructions</label>
@@ -312,14 +357,18 @@ const Form = (props: FormProps) => {
                         </div>
                     </div>
 
+                    { errors.instructions ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please ensure all fields are filled.</div></div> : <></>}
+
                     <hr />
                     <label htmlFor='source' className='form-label'>Source</label><br/>
-                    <small className='text-muted'>Insert the website this recipe is from, if applicable</small>
+                    <small className='text-muted'>Enter the website this recipe is from, if applicable</small>
                     <input type="text" className='form-control' id='source' placeholder='http...' />
                     
                     <hr />
                     <div className='text-center'>
-                        <button type="submit" className='btn btn-primary' value="Create Recipe">Create Recipe</button>
+                        <button type="submit" className='btn btn-primary' value="Create Recipe">{props.uploading ? 
+                            <div><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</div>
+                            : <div>Create Recipe</div>}</button>
                     </div>
                 </form>
             </div>

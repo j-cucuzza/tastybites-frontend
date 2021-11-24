@@ -15,6 +15,7 @@ type RecipeListProps =
     , onButton: (r: Recipe, i: number) => any
     , onDelete: (r: Recipe) => any
     , userSpecific: number
+    , pulling: boolean
     }
 
 const RecipeList = (props: RecipeListProps) => {
@@ -22,6 +23,7 @@ const RecipeList = (props: RecipeListProps) => {
     const [ searchBy, setSearchBy ] = React.useState<string>("name")
     const [ debouncedValue ] = useDebounce(cond, 300)
     const [ recipes, setRecipes ] = React.useState<Recipe[]>(props.recipes)
+    const [ loading, setLoading ] = React.useState(false)
     const handleInputChange = (e: any, key: string) => {
         setCond({...cond, [key]: e.target.value})
     }
@@ -91,7 +93,7 @@ const RecipeList = (props: RecipeListProps) => {
         if (debouncedValue.cuisine !== ""){
             tempRecipes = tempRecipes.filter((r: Recipe) => {
                 if (r.api === true){
-                    if (r.cuisine[0] === debouncedValue.cuisine){
+                    if (r.cuisine.some((c: string) => c === debouncedValue.cuisine)){
                         return true
                     }
                 } else if( r.cuisine === debouncedValue.cuisine){
@@ -136,18 +138,13 @@ const RecipeList = (props: RecipeListProps) => {
     }
 
     // get more recipes when button is pressed in filters
-    const handleMoreButton = () => props.onMoreButton(cond)
+    const handleMoreButton = () => {
+        props.onMoreButton(cond)
+    }
 
     // get random recipes when button is pressed in filters
     const handleRandomButton = () => {
-        api.getRandom()
-            .then(response => {
-                if(Array.isArray(response)){
-                    response.map((r: Recipe) => setRecipes(recipes => [ r, ...recipes]))
-                } else {
-                    alert("We are unable to get more recipes at this time.")
-                }
-            })
+        props.onRandomButton()
     }
 
 
@@ -158,8 +155,9 @@ const RecipeList = (props: RecipeListProps) => {
                     <Filters onInputChange={handleInputChange} 
                              onSearchBy={setSearchBy} 
                              searchBy={searchBy}
-                             onRandomButton={props.onRandomButton}
-                             onMoreButton={handleMoreButton}/>
+                             onRandomButton={handleRandomButton}
+                             onMoreButton={handleMoreButton}
+                             loading={props.pulling}/>
                 </div>
                 <div className="row row-cols-auto cards">
                     { renderRecipes() }

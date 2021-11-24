@@ -13,9 +13,14 @@ const Filters = (props: any) => {
                             <h4>Get More Recipes</h4>
                             <small className='text-muted'>Includes filters</small><br />
                             <div className='text-center btn-group'>
-                                <button type='button' 
+                                { props.loading ? 
+                                    <button type='button'
+                                        className='btn btn-secondary disabled'
+                                    ><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>
+                                    
+                                    : <button type='button' 
                                         className='btn btn-secondary'
-                                        onClick={() => props.onMoreButton()}>Apply Filters</button>
+                                        onClick={() => props.onMoreButton()}>Apply Filters</button>}
                             </div>
                             </div>
                         </div>
@@ -24,9 +29,14 @@ const Filters = (props: any) => {
                             <h4>Get Random Recipes</h4>
                             <small className='text-muted'>Does not include filters</small>
                             <div className='text-center btn-group'>
-                                <button type='button' 
+                                { props.loading ? 
+                                    <button type='button'
+                                        className='btn btn-secondary disabled'
+                                    ><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>
+                                    
+                                    :<button type='button' 
                                         className='btn btn-secondary'
-                                        onClick={() => props.onRandomButton()}>Get Random</button>
+                                        onClick={() => props.onRandomButton()}>Get Random</button>}
                             </div>
                             </div>
                         </div>

@@ -111,6 +111,7 @@ const Profile = (props: ProfileParams) => {
                                 userSpecific={filter}
                                 onRandomButton={props.onRandomButton}
                                 onMoreButton={props.onMoreButton}
+                                pulling={false}
                                 />
                 </div>
             </div>
