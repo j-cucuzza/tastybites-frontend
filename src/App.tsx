@@ -2,7 +2,7 @@
 import React from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom'
 import * as api from './util/api'
-import { AppError, Token, Recipe as RecipeType, ApiRecipe, UserMetadata } from './types'
+import { AppError, Token, Recipe as RecipeType, ApiRecipe, UserMetadata, Conditions } from './types'
 import {  Nav, Home, Form, Login, Recipe, Profile, Signup, Footer } from './components'
 
 const App = () => {
@@ -34,6 +34,7 @@ const App = () => {
   const [ apiErr, setApiErr ] = React.useState<boolean>(false)
   const [ uploading, setUploading ] = React.useState(false)
   const [ pulling, setPulling ] = React.useState(false)
+  const [ tempCond, setTempCond ] = React.useState<Conditions>({cuisine: '', diet: '', search: ''})
 /**
  * 
  * 
@@ -326,10 +327,14 @@ const App = () => {
   }
 
   // get more recipes when button is pressed in filters
-  const handleMoreButton = (cond: {search: string, cuisine: string, diet: string}) => {
+  const handleMoreButton = (cond: Conditions) => {
     setPulling(true)
+
     if (cond.search === "" && cond.cuisine === "" && cond.diet === ""){
       alert("Please add some filters before you try to get new recipes!")
+      setPulling(false)
+    } else if (tempCond.cuisine === cond.cuisine && tempCond.diet === cond.diet && tempCond.search === cond.search){
+      alert("Please change a filter before trying to get new recipes.")
       setPulling(false)
     } else {
       api.searchSpoon(cond)
@@ -341,6 +346,7 @@ const App = () => {
           alert("There was a problem fetching the recipes.  Please try again.")
           setPulling(false)
         })
+      setTempCond({search: cond.search, cuisine: cond.cuisine, diet: cond.diet})
     }
   }
 

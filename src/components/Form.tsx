@@ -275,7 +275,8 @@ const Form = (props: FormProps) => {
                     { errors.name ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please enter a valid name.</div></div> : <></>}
 
                     <hr />
-                    <label htmlFor='recipe-image' className='form-label'>Recipe Image</label>
+                    <label htmlFor='recipe-image' className='form-label'>Recipe Image</label><br />
+                    <small className='text-muted'>Must be a .png or a .jpg file</small>
                     <input type='file' 
                         className='form-control'
                         accept='.png,.jpg' 

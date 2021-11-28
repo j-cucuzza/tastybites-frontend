@@ -23,7 +23,7 @@ const Signup = (props: SignupProps) => {
         <div className='container justify-content-center'>
             <div className="row p-3"><br /></div>
             <div className="row p-3"><br /></div>
-            <h2 className='p-3 form-header d-flex flex-column'>Welcome to Cookbook!</h2>
+            <h2 className='p-3 form-header d-flex flex-column'>Welcome to Tasty Bites!</h2>
             <div className=' d-flex flex-column forms p-5'>
                 <div className='container align-items-center'>
                     <div className='mb-3'>
@@ -58,6 +58,7 @@ const Signup = (props: SignupProps) => {
                     <button type="submit" className='btn btn-primary' value="Submit" onClick={() => props.onSignup(creds)}>Sign Up!</button>
                 </div>
             </div>
+            <div className='row p-3'></div>
         </div>
     )
 }

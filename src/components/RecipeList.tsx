@@ -35,11 +35,12 @@ const RecipeList = (props: RecipeListProps) => {
      * @returns recipe cards for display, based on given filters
      */
     const renderRecipes = () => {
+        console.log(recipes.length)
         if (recipes.length === 0) {
             return <section className='col'><NoRecipeCard /></section>
         }
 
-        return recipes.map((r, i) => {
+        return recipes.filter((recipe, i, arr) => arr.findIndex(t => t.recipe_id === recipe.recipe_id) === i).map((r, i) => {
             return  <section key={i} className='col align-items-center position-relative'>
                         <RecipeCard recipe={r} onButton={ props.onButton } onDelete={props.onDelete} onFavorite={props.onFavorite} onDeleteButton={ renderDeleteButton } i={i}/>
                     </section>

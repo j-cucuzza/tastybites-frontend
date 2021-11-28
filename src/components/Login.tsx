@@ -49,6 +49,7 @@ const Login = (props: LoginProps) => {
                     <button type="submit" className='btn btn-primary' value="Login" onClick={handleLogin}>Login</button>
                 </div>
             </div>
+            <div className='row p-3'></div>
         </div>
     )
 }
