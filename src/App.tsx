@@ -210,8 +210,6 @@ const App = () => {
  * 
  * 
  */ 
-
-
   // add or remove favorites.  r: recipe id, a: api (true if from external api, false if not)
   const handleFavorites = (r: number, a: boolean) => {
     // disallow rapid clicking of button to prevent too many calls to api
@@ -306,6 +304,8 @@ const App = () => {
     }
   }
 
+
+  // FILTER COMPONENT
   // get random recipes when button is pressed in filters
   const handleRandomButton = () => {
     setPulling(true)
@@ -324,7 +324,6 @@ const App = () => {
           setPulling(false)
         })
   }
-
 
   // get more recipes when button is pressed in filters
   const handleMoreButton = (cond: {search: string, cuisine: string, diet: string}) => {
@@ -346,7 +345,12 @@ const App = () => {
   }
 
 
+
+
+
+
   // format recipe tag recipes to fit with recipe type
+  // makes it easy to access attributes
   const formatRecipe = (recipe: any) => {
     return {
       name: recipe.recipe_id.name,
@@ -369,6 +373,8 @@ const App = () => {
     }
   }
 
+
+
 /**
  * 
  * 
@@ -382,6 +388,7 @@ const App = () => {
  */ 
   React.useEffect(() => {
     const localToken = localStorage.getItem('token')
+
 
     // user has logged in previously
     if (localToken) {
@@ -397,15 +404,6 @@ const App = () => {
     }
 
 
-    // get recipes from database to display
-    // api.getRecipeList()
-    //   .then(response =>{
-    //     setRecipes(response)
-    //     })
-    //   .catch((e: api.ApiError) => {
-    //     // handle error
-    // })
-
     // get recipe tags
     api.recipeTags()
       .then(list => 
@@ -413,6 +411,7 @@ const App = () => {
             return formatRecipe(recipe)})
           ) 
         )
+    
     // get a random set of recipes from spoonacular api
     api.getRandom()
       .then(response => {
