@@ -243,6 +243,7 @@ const App = () => {
       .then(json => {
           let newRecipe = formatRecipe(json)
           setRecipes([newRecipe, ...recipes])
+          setUserRecipes([newRecipe,...userRecipes])
           setUploading(false)
           history.push('/')
       }).catch((e: api.ApiError) => {
