@@ -8,9 +8,21 @@ import {  Nav, Home, Form, Login, Recipe, Profile, Signup, Footer } from './comp
 const App = () => {
   const history = useHistory()
 
-  // create state hooks
+  /**
+   * 
+   * 
+   * create state hooks
+   * 
+   * 
+   */
+
+  // page is currently loading, pulling recipes from database
   const [ loading, setLoading ] = React.useState<boolean>(true)
+
+  // user is logged in
   const [ loggedIn, setLoggedIn ] = React.useState<boolean>(false)
+
+  // user profile information
   const [ profile, setProfile ] = React.useState<UserMetadata>({
     username: "",
     first_name: "",
@@ -18,6 +30,8 @@ const App = () => {
     id: 0,
     isStaff: false
   })
+
+  // errors for login / signup page
   const [ errors, setErrors ] = React.useState<AppError>({
     username: "",
     password: "",
@@ -27,14 +41,33 @@ const App = () => {
 
   // might not need to include token in state
   const [ token, setToken ] = React.useState<Token>({ refresh: '', token: '' })
+
+  // page recipes
   const [ recipes, setRecipes ] = React.useState<RecipeType[]>([])
-  // const [ apiRecipe, setApiRecipe ] = React.useState<ApiRecipe | null>(null)
+
+  // user recipes
+  // kept separate due to possibility for private recipes
+  // might could just query database for privated recipes when viewing profile page
   const [ userRecipes, setUserRecipes ] = React.useState<RecipeType[]>([])
+
+  // disable button when pressed to prevent pressing too many times
   const [ disabled, setDisabled ] = React.useState<boolean>(true)
+
+  // api errors
   const [ apiErr, setApiErr ] = React.useState<boolean>(false)
+
+  // uploading new recipe, disable button in the meantime
   const [ uploading, setUploading ] = React.useState(false)
+
+  // pulling new recipes from the spoonacular api (getRandom and getMore)
   const [ pulling, setPulling ] = React.useState(false)
+
+  // conditions to prevent users from repeatedly pressing the "get more" button without changing their filters
   const [ tempCond, setTempCond ] = React.useState<Conditions>({cuisine: '', diet: '', search: ''})
+
+
+
+
 /**
  * 
  * 
@@ -113,12 +146,15 @@ const App = () => {
 
   // function for log in
   const handleLogin = (un: string, pw: string) => {
+    setLoading(true)
     api.login(un,pw)
       .then(response => {
         setupToken(response)
+        setLoading(false)
       })
       .catch((e: api.ApiError) => {
         setErrors({ ...errors, generic: 'Invalid username or password.'})
+        setLoading(false)
       })
   }
 
@@ -149,7 +185,7 @@ const App = () => {
   
   // function for signup
   const handleSignup = (data: any) => {
-
+    setLoading(true)
     // ensure that the user-submitted form data is correct and usable
     if (data.first_name === ""  ||
         data.last_name === ""){
@@ -180,6 +216,7 @@ const App = () => {
         // reset errors for signup
         setErrors({ username: "", password: "", email: "", generic: "" })
         history.push('/profile/')
+        setLoading(false)
       }).catch(error => {
         if (typeof error.then === "function"){
             error.then((json: any) =>{
@@ -193,6 +230,7 @@ const App = () => {
             // log unknown error
             console.log(JSON.stringify(error))
         }
+        setLoading(false)
         
     })
     }
@@ -447,7 +485,13 @@ const App = () => {
 
   return (
     <> { loading 
-      ? <div></div> 
+      ? <div className='page'>
+          <div className='container-fluid d-flex justify-content-center spin-content'>
+              <div className='spin spinner-border spinner-border-xl text-secondary' role='status'>
+                  <span className='sr-only'>Loading...</span>
+              </div> 
+          </div>
+        </div> 
       : <div className='page'>
           <Nav loggedIn={loggedIn} onLogout={handleLogout} />
           
@@ -476,6 +520,7 @@ const App = () => {
               </Route>
               <Route exact path='/profile/'>
                 <Profile loggedIn={loggedIn} 
+                         loading={loading}
                          user={profile} 
                          onDelete={handleDeleteRecipe} 
                          onFavorite={handleFavorites} 
@@ -496,7 +541,8 @@ const App = () => {
                       disabled={disabled}
                       onRandomButton={handleRandomButton}
                       onMoreButton={handleMoreButton}
-                      pulling={pulling}/>
+                      pulling={pulling}
+                      loading={loading}/>
               </Route>
             </Switch>
           </div>

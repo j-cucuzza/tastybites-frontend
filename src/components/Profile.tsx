@@ -8,6 +8,7 @@ import * as api from '../util/api'
 
 type ProfileParams =
     { loggedIn: boolean
+    , loading: boolean
     , user: UserMetadata
     , userRecipes: Recipe[]
     , onFavorite: (r: number, a: boolean) => void
@@ -48,7 +49,13 @@ const Profile = (props: ProfileParams) => {
     // }, [])
 
     return (
-        <div className='container-fluid'>
+        <> { !props.loggedIn && props.loading ? 
+            <div className='container-fluid d-flex justify-content-center spin-content p-5'>
+                <div className='spin spinner-border spinner-border-xl text-secondary p-5' role='status'>
+                    <span className='sr-only'>Loading...</span>
+                </div> 
+            </div>
+        : <div className='container-fluid'>
             <div className="row p-3"><br /></div>
             {/* <div className="row p-3 mx-auto position-relative justify-content-md-left"> */}
                 <div className='container row position-relative profile-info'>
@@ -78,26 +85,6 @@ const Profile = (props: ProfileParams) => {
                         </div>
                     </div>
                 </div>
-
-                
-            {/* </div> */}
-            {/* <div className='row filters favs-own text-center p-3'>
-                    <div className='btn-group' role='group'>                            
-                        <input type='radio' className='btn-check' name='btnradio' 
-                            // onChange={ () => props.onSearchBy('ingredient') }
-                            autoComplete='off'
-                            aria-label='my recipes button' 
-                            id='myrecipes'/>
-                        <label className='btn btn-outline-secondary' htmlFor='myrecipes'>My Recipes</label>
-
-                        <input type='radio' className='btn-check' name='btnradio' 
-                            // onChange={ () => props.onSearchBy('name') }
-                            autoComplete='off'
-                            aria-label='my favorites button'
-                            id='favorites'/>
-                        <label className='btn btn-outline-secondary' htmlFor='favorites'>My Favorites</label>
-                    </div>
-                </div> */}
             
             <div className="container">
                 <div className="row">
@@ -112,11 +99,12 @@ const Profile = (props: ProfileParams) => {
                                 onRandomButton={props.onRandomButton}
                                 onMoreButton={props.onMoreButton}
                                 pulling={false}
+                                loading={props.loading}
                                 />
                 </div>
             </div>
         </div>
-    )
+        } </>)
 }
 
 export default Profile

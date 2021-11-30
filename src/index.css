@@ -315,8 +315,8 @@ code {
   margin-bottom: 10%;
 }
 .spin {
-  width: 10rem;
-  height: 10rem;
+  width: 19.2rem;
+  height: 19.2rem;
 }
 @media (max-width: 767.98px){
   .spin-content {

@@ -16,6 +16,7 @@ type RecipeListProps =
     , onDelete: (r: Recipe) => any
     , userSpecific: number
     , pulling: boolean
+    , loading: boolean
     }
 
 const RecipeList = (props: RecipeListProps) => {
@@ -35,7 +36,6 @@ const RecipeList = (props: RecipeListProps) => {
      * @returns recipe cards for display, based on given filters
      */
     const renderRecipes = () => {
-        console.log(recipes.length)
         if (recipes.length === 0) {
             return <section className='col'><NoRecipeCard /></section>
         }
@@ -161,7 +161,13 @@ const RecipeList = (props: RecipeListProps) => {
                              loading={props.pulling}/>
                 </div>
                 <div className="row row-cols-auto cards">
-                    { renderRecipes() }
+                    { props.loading ? 
+                    <div className='container-fluid d-flex justify-content-center spin-content p-5'>
+                        <div className='spin spinner-border spinner-border-xl text-secondary p-5' role='status'>
+                            <span className='sr-only'>Loading...</span>
+                        </div> 
+                    </div>
+                    : renderRecipes() }
                 </div>
         </div>)
 }

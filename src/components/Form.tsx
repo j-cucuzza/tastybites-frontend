@@ -172,7 +172,7 @@ const Form = (props: FormProps) => {
         setErrors({...errors, [key]: false})
         // generate slug
         if (key === 'name') {
-            setRecipe({...recipe, name: e.target.value, slug: props.user.id + "-" + slug(e.target.value)})
+            setRecipe({...recipe, name: e.target.value, slug: props.user.id.toString() + "-" + slug(e.target.value)})
         }
         if (key === 'servings') {
             setRecipe({...recipe, servings: parseInt(e.target.value)})
@@ -222,12 +222,12 @@ const Form = (props: FormProps) => {
      * @param image / image file to be uploaded, taken from file input
      */
     const validateImage = (image: any) => {
-        console.log(image[0].type)
-        if(image[0].type === "image/png" || image[0].type === "image/jpeg") {
+        // make sure image size is at most 10 MB and type is png or jpg
+        if((image[0].type === "image/png" || image[0].type === "image/jpeg") && (parseInt(image[0].size) <= 10000000)) {
             setFile(image)
             setErrors({...errors, image: false})
         } else {
-            alert("Please provide a .jpg or .png file")
+            alert("Please provide a .jpg or .png file less than 10 Megabytes in size.")
             setFile('')
             setErrors({...errors, image: true})
         }
