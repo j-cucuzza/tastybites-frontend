@@ -55,6 +55,7 @@ const Filters = (props: any) => {
                                 <option></option>
                                 <option value='American'>American</option>
                                 <option value='Asian'>Asian</option> 
+                                <option value='French'>French</option>
                                 <option value='German'>German</option>
                                 <option value='Indian'>Indian</option>
                                 <option value='Italian'>Italian</option>

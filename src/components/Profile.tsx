@@ -25,7 +25,7 @@ const Profile = (props: ProfileParams) => {
 
     // go to login / homepage if user is not logged in
     React.useEffect(() => {
-        if (props.loggedIn && localStorage.getItem('token')) {
+        if (localStorage.getItem('token')) {
             // api.getCurrentUser()
             //     .then(response => setProfile(response))
         } else {

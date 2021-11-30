@@ -172,7 +172,7 @@ const Form = (props: FormProps) => {
         setErrors({...errors, [key]: false})
         // generate slug
         if (key === 'name') {
-            setRecipe({...recipe, name: e.target.value, slug: slug(e.target.value)})
+            setRecipe({...recipe, name: e.target.value, slug: props.user.id + "-" + slug(e.target.value)})
         }
         if (key === 'servings') {
             setRecipe({...recipe, servings: parseInt(e.target.value)})
@@ -291,6 +291,7 @@ const Form = (props: FormProps) => {
                                 <option></option>
                                 <option value='American'>American</option>
                                 <option value='Asian'>Asian</option> 
+                                <option value='French'>French</option>
                                 <option value='German'>German</option>
                                 <option value='Indian'>Indian</option>
                                 <option value='Italian'>Italian</option>
