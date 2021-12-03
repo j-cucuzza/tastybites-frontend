@@ -1,9 +1,7 @@
 import React from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { useDebounce } from 'use-debounce'
-import { Recipe, UserMetadata, Conditions } from '../types'
-import { RecipeCard, Filters, RecipeList } from '.'
-import * as api from '../util/api'
+import { useHistory } from 'react-router-dom'
+import { Recipe, UserMetadata} from '../types'
+import { RecipeList } from '.'
 
 
 type ProfileParams =
@@ -35,19 +33,6 @@ const Profile = (props: ProfileParams) => {
     },[])
 
 
-    // update recipes when filter option changed (user recipes versus user favorites)
-    // React.useEffect(() => {
-    //     let tempRecipes = props.userRecipes
-
-    //     if (filter === 1){
-    //         tempRecipes = tempRecipes.filter((r: Recipe) => r.user === props.user.id)
-    //     } else if (filter === 2){
-    //         tempRecipes = tempRecipes.filter((r: Recipe) => r.user !== props.user.id)
-    //     }
-
-    //     setRecipes(tempRecipes)
-    // }, [])
-
     return (
         <> { !props.loggedIn && props.loading ? 
             <div className='container-fluid d-flex justify-content-center spin-content p-5'>
@@ -57,7 +42,6 @@ const Profile = (props: ProfileParams) => {
             </div>
         : <div className='container-fluid'>
             <div className="row p-3"><br /></div>
-            {/* <div className="row p-3 mx-auto position-relative justify-content-md-left"> */}
                 <div className='container row position-relative profile-info'>
                     <div className='col-3 p-4'>
                         <img width='100px' height='100px' src="https://d2i7h2wv1n9itn.cloudfront.net/media/img/bev.png" alt='profile icon'/>

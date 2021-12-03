@@ -4,6 +4,8 @@ type ModalProps =
     { onLogout: () => void
     }
 
+
+// this modal is used to ask for confirmation about logout
 const LogoutModal = (props: ModalProps) => 
     <div className="modal fade" id="logoutModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">

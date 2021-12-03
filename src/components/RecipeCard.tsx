@@ -21,7 +21,7 @@ const RecipeCard = (props: RecipeCardProps) =>
                     <img className='card-img-top' src={props.recipe.image} alt={props.recipe.name} />
                     <div className='card-body d-flex flex-column'>
                         <h3 className="card-title mb-auto recipe-card">{props.recipe.name}</h3>
-                        <Link className='btn btn-secondary' to={'/recipe/' + props.recipe.slug + '/' + props.recipe.api}>View Recipe</Link>
+                        <Link className='btn btn-secondary' to={'/recipe/' + props.recipe.slug}>View Recipe</Link>
                     </div>
                     <div className='card-footer text-center'><small className='text-muted'>{ props.onButton(props.recipe, props.i) } </small></div>
                 </div>

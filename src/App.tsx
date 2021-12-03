@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom'
-import * as api from './util/api'
-import { AppError, Token, Recipe as RecipeType, ApiRecipe, UserMetadata, Conditions } from './types'
-import {  Nav, Home, Form, Login, Recipe, Profile, Signup, Footer } from './components'
+import { Route, Switch, useHistory } from 'react-router-dom';
+import { Footer, Form, Home, Login, Nav, Profile, Recipe, Signup } from './components';
+import { AppError, Conditions, Recipe as RecipeType, Token, UserMetadata } from './types';
+import * as api from './util/api';
 
 const App = () => {
   const history = useHistory()
@@ -81,7 +81,7 @@ const App = () => {
  * 
  */
 
-// initialize profile information
+  // initialize profile information
   const setupToken = (tokenResponse: any) => {
     let logIn = false
     // set profile when initially logging in, else set with information from current user
@@ -515,7 +515,7 @@ const App = () => {
               <Route exact path='/signup/'>
                 <Signup errors={errors} onSignup={handleSignup}/>
               </Route>
-              <Route exact path='/recipe/:slug/:api'>
+              <Route exact path='/recipe/:slug/'>
                 <Recipe recipes={recipes}/>
               </Route>
               <Route exact path='/profile/'>

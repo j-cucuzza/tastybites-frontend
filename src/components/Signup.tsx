@@ -8,6 +8,8 @@ type SignupProps =
     }
 
 const Signup = (props: SignupProps) => {
+
+    // credential information
     const [creds, setCreds] = React.useState({username: "", 
                                         password: "", 
                                         email: "",

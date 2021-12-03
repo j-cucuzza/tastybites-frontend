@@ -4,7 +4,7 @@ import React from 'react'
 const Filters = (props: any) => {
 
 
-    // only render get more and get random buttons when 
+    // only render get more and get random buttons when on home page
     const renderMore = () => {
         if (window.location.pathname !== "/profile/"){
             return <div className='row filters p-3'>

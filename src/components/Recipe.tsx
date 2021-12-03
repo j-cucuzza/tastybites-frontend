@@ -3,38 +3,30 @@ import { useParams } from 'react-router'
 import { useHistory } from 'react-router-dom'
 import { Ingredient, Recipe as RecipeType } from '../types'
 import * as apiCall from '../util/api'
-import CSS from 'csstype'
 
-type RecipeURLParams = 
-    { slug: string
-    , api: string
-    }
+type RecipeURLParams = { slug: string }
 
+// type to properly format ingredients pulled from database
 type SerializerIngredient = 
     { ingredient_id: { ingredient_id: number, name: string }
     , qty: number
     , units: string 
     }
 
-// const spinnerContainer: CSS.Properties = {
-//     height: '100%',
-//     bottom: 0,
-//     marginTop: '10%',
-//     marginBottom: '10%',
-// }
-// const spinnerStyle: CSS.Properties = {
-//     width: '10rem',
-//     height: '10rem',
-// }
-
 const Recipe = (props: any) => {
     const history = useHistory()
 
-    const { slug, api } = useParams<RecipeURLParams>()
+    const { slug } = useParams<RecipeURLParams>()
     const [ ingredients, setIngredients ] = React.useState<Ingredient[]>([])
     const [ loading, setLoading ] = React.useState<Boolean>(true)
-    // const [ apiIngredients, setApiIngredients ] = React.useState<Ingredient[]>([])
+
+    // find recipe
+    // will be undefined if trying to find a spoonacular recipe that has not been loaded
+    // undefined is handled in the useEffect
     const recipe = props.recipes.find((r: RecipeType) => r.slug === slug)
+
+    // set for if recipe is taken from the spoonacular api
+    const [api, setApi] = React.useState<boolean>(false)
     const [ apiRecipe, setApiRecipe ] = React.useState<RecipeType>({
         name: "",
         recipe_id: -1,
@@ -64,22 +56,45 @@ const Recipe = (props: any) => {
      * 
     */
     React.useEffect(() => {
-        if (api !== 'true') {
-            apiCall.getIngredients(recipe.recipe_id)
-                .then(ings => {
-                    setIngredients([...ings.map((i: SerializerIngredient) => {
-                            return { name: i.ingredient_id.name
-                                , id: i.ingredient_id.ingredient_id
-                                , qty: i.qty
-                                , units: i.units
-                            }
-                        }) 
-                    ])
-                    setLoading(false)
+        if (!recipe){
+            apiCall.getApiRecipe(+slug.split('-')[0])
+                .then(response => {
+                    setApiRecipe(response)
+                    setApi(true)
+                })
+                .catch((e: Error) => {
+                    alert("There was a problem accessing this recipe.")
+                    history.push('/')
                 })
         } else {
-            apiCall.getApiRecipe(+slug.split('-')[0])
-                .then(response => setApiRecipe(response))
+            if (recipe.api !== true){
+                apiCall.getIngredients(recipe.recipe_id)
+                    .then(ings => {
+                        setIngredients([...ings.map((i: SerializerIngredient) => {
+                                return { name: i.ingredient_id.name
+                                    , id: i.ingredient_id.ingredient_id
+                                    , qty: i.qty
+                                    , units: i.units
+                                }
+                            }) 
+                        ])
+                        setLoading(false)
+                    })
+                    .catch((e: Error) => {
+                        alert("There was a problem accessing this recipe.")
+                        history.push('/')
+                    })
+            } else {
+                apiCall.getApiRecipe(+slug.split('-')[0])
+                    .then(response => {
+                        setApiRecipe(response)
+                        setApi(true)
+                    })
+                    .catch((e: Error) => {
+                        alert("There was a problem accessing this recipe.")
+                        history.push('/')
+                    })
+            }
         }
     }, [])
 
@@ -103,12 +118,6 @@ const Recipe = (props: any) => {
                 units: i.unit
             }
         })])
-        // recipe.ingredients.map(r => ({
-        //     id: r.id,
-        //     name: r.name,
-        //     qty: r.qty,
-        //     units: r.units
-        // }))
 
 
     const renderRecipe = (r: RecipeType) => {
@@ -128,15 +137,16 @@ const Recipe = (props: any) => {
                                 </div>
                                 <div className='list-group-item instructions'>
                                     <h3>Instructions</h3>
-                                    <ol>{api ==="true" ? r.instructions.map((inst: string, k: number) => <li key={k}>{inst}</li>) 
+                                    <ol>{api ? r.instructions.map((inst: string, k: number) => <li key={k}>{inst}</li>) 
                                                         : JSON.parse(r.instructions.toString()).map((inst: string, k: number) => 
                                                                                                             <li key={k}>{inst}<hr /></li>)}</ol>
                                 </div>
                             </div>
-                            <div className="card-footer text-center">
-                                <a href={r.url} className='btn btn-outline-secondary'>Source</a>
-                            </div>
-                        {/* </div> */}
+                            {r.url === "" || r.url === "http://tastybites.surge.sh" ? <></> : 
+                                <div className="card-footer text-center">
+                                    <a href={r.url} className='btn btn-outline-secondary'>Source</a>
+                                </div>
+                            }
                     </div>
                 </div>
             </div>
@@ -151,7 +161,7 @@ const Recipe = (props: any) => {
                             </div> 
                         </div>
             
-                : renderRecipe(api === "true" ? apiRecipe : recipe) }
+                : renderRecipe(api ? apiRecipe : recipe) }
         </div>
     )
 

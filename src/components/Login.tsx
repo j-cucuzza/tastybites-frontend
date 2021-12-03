@@ -15,6 +15,7 @@ const Login = (props: LoginProps) => {
     const [creds, setCreds] = React.useState<Creds>({username: "", password: ""})
     const [ error, setError ] = React.useState(false)
 
+    // send credentials to login function
     const handleLogin = () =>
         props.onLogin(creds.username, creds.password)
 
@@ -22,6 +23,7 @@ const Login = (props: LoginProps) => {
         setCreds({...creds, [e.target.name]: e.target.value})
     }
 
+    // display errors
     React.useEffect(() => {
         if (props.errors.generic !== "") {
             setError(true)
@@ -29,6 +31,8 @@ const Login = (props: LoginProps) => {
             setError(false)
         }
     }, [props.errors])
+
+
     return (
         <div className='container mx-auto justify-content-center'>
             <div className="row p-3"><br /></div>

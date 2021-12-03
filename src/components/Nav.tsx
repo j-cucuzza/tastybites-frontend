@@ -7,6 +7,9 @@ type NavProps =
     { onLogout: () => void
     , loggedIn: boolean
     }
+
+
+// navbar format when not authenticated
 const LoggedOutNav = () =>
         <div className='navbar-nav'>
             <Link className="nav-item nav-link"  to="/" >Home</Link>
@@ -14,6 +17,7 @@ const LoggedOutNav = () =>
             <Link className="nav-link" to={"/signup/"}>Signup</Link>
         </div>
 
+// navbar format when authenticated
 const LoggedInNav = (props: Pick<NavProps, 'onLogout'>) => 
         <div className='navbar-nav'>
             <Link className="nav-item nav-link"  to="/" >Home</Link>

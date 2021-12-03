@@ -1,6 +1,5 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
-import { Recipe, Ingredient, UserMetadata } from '../types'
+import { Ingredient, Recipe, UserMetadata } from '../types'
 import slug from '../util/slug'
 
 type FormProps =
@@ -10,7 +9,6 @@ type FormProps =
     }
 
 const Form = (props: FormProps) => {
-    const history = useHistory()
     const defaultIngredient = {
         name: '',
         id: -1,
@@ -50,17 +48,17 @@ const Form = (props: FormProps) => {
     })
 
 
-/**
- * 
- * 
- * 
- * 
- * ADD / REMOVE FORM INPUTS
- * 
- * 
- * 
- * 
- */
+    /**
+     * 
+     * 
+     * 
+     * 
+     * ADD / REMOVE FORM INPUTS
+     * 
+     * 
+     * 
+     * 
+     */
     // add input for ingredients
     const addIngredientInput = () => {
         let input = "ingredient-" + ingredientInputs.length
@@ -112,17 +110,17 @@ const Form = (props: FormProps) => {
 
 
 
-/**
- * 
- * 
- * 
- * 
- * CREATE RECIPE ON FORM INPUTS
- * 
- * 
- * 
- * 
- */
+    /**
+     * 
+     * 
+     * 
+     * 
+     * CREATE RECIPE ON FORM INPUTS
+     * 
+     * 
+     * 
+     * 
+     */
     /**
      * 
      * @param index / index in instruction list to change 
@@ -235,17 +233,17 @@ const Form = (props: FormProps) => {
 
 
 
-/**
- * 
- * 
- * 
- * 
- * POST RECIPE TO DATABASE
- * 
- * 
- * 
- * 
- */ 
+    /**
+     * 
+     * 
+     * 
+     * 
+     * POST RECIPE TO DATABASE
+     * 
+     * 
+     * 
+     * 
+     */ 
     const createRecipe = (e: any) => {
         e.preventDefault()
         if(!validateForm()){

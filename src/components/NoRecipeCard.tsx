@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-
+// this card is used to be displayed when there are no recipes to display
 const NoRecipeCard = () =>
     <div>
         <div className='card'>
