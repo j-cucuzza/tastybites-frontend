@@ -114,7 +114,7 @@ const App = () => {
       //   setUserRecipes(userRecipes => [ ...userRecipes, r])
       // )
       setUserRecipes(list.map((recipe: any) =>  {
-        return formatRecipe(recipe)}))
+        return formatRecipe(recipe)}) )
         // setLoggedIn(true)
 
     })
@@ -174,6 +174,10 @@ const App = () => {
     setProfile({username: "",first_name: "",last_name: "",id: 0, isStaff: false})
     setToken({ token: '', refresh: ''})
     setUserRecipes([])
+
+    // remove privated recipes
+    setRecipes(recipes.filter((recipe) =>!recipe.privated))
+
     setErrors({ username: "", password: "", email: "", generic: "" })
     setLoggedIn(false)
     history.push("/")
@@ -309,7 +313,11 @@ const App = () => {
     if (!loggedIn){
         return;
     } else if (r.user === profile.id) {
-        return 'You made this!'
+        if(r.privated) {
+          return 'Only you can see this recipe you privated.'
+        } else {
+          return 'You made this!'
+        }
     }
     const desc = userRecipes.some((ur: RecipeType) => ur.recipe_id === r.recipe_id) ? 'Remove Favorite' : 'Favorite'
     if (r.api && desc === 'Remove Favorite'){
@@ -414,7 +422,8 @@ const App = () => {
       low_calorie: recipe.low_calorie,
       vegetarian: recipe.vegetarian,
       vegan: recipe.vegan,
-      cuisine: recipe.cuisine
+      cuisine: recipe.cuisine,
+      privated: recipe.recipe_id.privated
     }
   }
 
@@ -454,6 +463,7 @@ const App = () => {
       .then(list => 
           setRecipes(list.map((recipe: any) =>  {
             return formatRecipe(recipe)})
+            .filter((recipe: RecipeType) => !(recipe.privated && recipe.user !== profile.id))
           ) 
         )
     

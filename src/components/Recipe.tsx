@@ -45,6 +45,7 @@ const Recipe = (props: any) => {
         , vegetarian: false
         , vegan: false
         , cuisine: ""
+        , privated: false
     })
     
     
@@ -131,6 +132,9 @@ const Recipe = (props: any) => {
                         <img src={r.image} alt={r.name} className='extended-card card-img-top' height='400' width='500'/>
                             <h2 className='card-title card-header'>{r.name}</h2>
                             <div className='list-group list-group-flush'>
+                                <div className='list-group-item Servings'>
+                                    <h3>Servings: {r.servings}</h3>
+                                </div>
                                 <div className='list-group-item ingredients'>
                                     <h3>Ingredients</h3>
                                     <ul>{ingredients.map((ing, k) => <li key={k}>{ing.qty + " " + ing.units + " " + ing.name}</li>)}</ul>

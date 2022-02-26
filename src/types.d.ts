@@ -46,6 +46,7 @@ interface Recipe extends Indexable
   , vegetarian: Boolean
   , vegan: Boolean
   , cuisine: any
+  , privated: Boolean
   }
 
 interface Ingredient extends Indexable

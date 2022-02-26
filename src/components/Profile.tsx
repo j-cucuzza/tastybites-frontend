@@ -66,6 +66,13 @@ const Profile = (props: ProfileParams) => {
                                 aria-label='my favorites button'
                                 id='favorites'/>
                             <label className='btn btn-outline-secondary' htmlFor='favorites'>My Favorites</label>
+
+                            <input type='radio' className='btn-check' name='btnradio' 
+                                onChange={ () => setFilter(3) }
+                                autoComplete='off'
+                                aria-label='my favorites button'
+                                id='private'/>
+                            <label className='btn btn-outline-secondary' htmlFor='private'>My Privated</label>
                         </div>
                     </div>
                 </div>

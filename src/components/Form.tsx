@@ -45,6 +45,7 @@ const Form = (props: FormProps) => {
         , vegetarian: false
         , vegan: false
         , cuisine: ""
+        , privated: false
     })
 
 
@@ -166,6 +167,7 @@ const Form = (props: FormProps) => {
      * @returns 
      */
     const handleInputChange = (key: string) => (e: any) => {
+        console.log(e.target.value)
         setRecipe({...recipe, [key]: e.target.value})
         setErrors({...errors, [key]: false})
         // generate slug
@@ -282,6 +284,17 @@ const Form = (props: FormProps) => {
                         onChange={ (e: any) => validateImage(e.target.files)}/>
 
                     { errors.image ? <div><br /><div className='alert alert-danger w-75' role='alert'>Please select a valid image (.png or .jpg).</div></div> : <></>}
+
+                    <hr />
+                    <label htmlFor='privated' className='form-label'>Private?</label><br />
+                    <div className='btn-group' role='group'>                            
+                            <input type='checkbox' className='btn-check' name='btnradio' 
+                                onChange={() => setRecipe({...recipe, private: !recipe.private})}
+                                aria-label='private' 
+                                id='myrecipes'/>
+                            <label className='btn btn-outline-secondary' htmlFor='myrecipes'>Privated</label>
+
+                        </div>
 
                     <hr />
                     <label htmlFor='cuisine' className='form-label'>Cuisine</label><br/>

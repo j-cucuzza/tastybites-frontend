@@ -111,6 +111,8 @@ const RecipeList = (props: RecipeListProps) => {
             tempRecipes = tempRecipes.filter((r: Recipe) => r.user === props.user.id)
         } else if (props.userSpecific === 2){
             tempRecipes = tempRecipes.filter((r: Recipe) => r.user !== props.user.id)
+        } else if (props.userSpecific === 3){
+            tempRecipes = tempRecipes.filter((r: Recipe) => r.privated)
         }
 
         // filter recipes by diet input
