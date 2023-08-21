@@ -1,6 +1,6 @@
 # University of Mississippi Computer Science - 487
 
-This frontend is hosted through [surge](https://surge.sh) and viewable [here, tastybites.surge.sh](tastybites.surge.sh).
+Due to the free version of Heroku and AWS being removed, the website is no longer viewable. However, the codebase is still fine. The backend is currently privated. 
 
 ## Description
 
